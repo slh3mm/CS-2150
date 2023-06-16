@@ -1,0 +1,94 @@
+C00C	000	to CONSTRUCT	jmp	
+0000	001				dw i		i = 0
+0009	002				dw j		j = MAX - 1
+000A	003				dw size	size = 10
+0001	004				dw one	1
+0070	005				dw address	0050
+3000	006				dw loadit	3000
+4000	007				dw storeit	4000
+0000	008				dw temp	
+0000	009				dw previous	
+0000	00A				dw current	
+0000	00B				dw next	
+3003	00C	CONSTRUCT		load 		size					Construct Array
+6001	00D				sub 		i	
+D019	00E	to SORT		jmpe 	
+3007	00F				load 		storeit	
+5005	010				add 		address	
+5001	011				add 		i	
+4014	012				store 	doit	
+1000	013				readH	
+0000	014				dw 		doit	
+3001	015				load		i 	
+5004	016				add 		one	
+4001	017				store 	i	
+C00C	018	to CONSTRUCT	jmp	
+3001	019	SORT			load 		i 					Set i=0 and sort
+6001	01A				sub 		i	
+4001	01B				store 	i	
+3001	01C	i LOOP		load 		i 					Outer for-loop
+6003	01D				sub 		size	
+D04D	01E				jmpe 		to PRINT
+3002	01F	j LOOP		load 		j					Inner for-loop
+6001	020				sub 		i	
+D046	021				jmpe		to END OF i LOOP
+3006	022				load 		loadit	
+5005	023				add 		address				a[0]
+5002	024				add 		j					a[j]
+4026	025				store 	doit2	
+0000	026				dw doit2	
+400A	027				store 	current				current = a[j]
+3006	028				load 		loadit	
+5005	029				add 		address				a[0]
+5002	02A				add 		j					a[j]
+6004	02B				sub 		one					a[j-1]
+402D	02C				store 	doit3	
+0000	02D				dw doit3	
+4009	02E				store 	previous				previous = a[j-1]
+300A	02F				load 		current	
+6009	030				sub		previous				check if(a[j]<a[j-1])
+E033	031				jmpl		to SWAP
+C042	032				jmp		to END OF j LOOP
+300A	033	SWAP			load 		current	
+4008	034				store 	temp					temp = a[j]
+3007	035				load 		storeit	
+5005	036				add 		address	
+5002	037				add 		j	
+403A	038				store 	doit4	
+3009	039				load 		previous	
+0000	03A				dw doit4						a[j] = a[j-1]
+3007	03B				load 		storeit	
+5005	03C				add 		address	
+5002	03D				add 		j	
+6004	03E				sub 		one	
+4041	03F				store		doit5	
+3008	040				load 		temp	
+0000	041				dw doit5						a[j-1] = temp
+3002	042	END OF j LOOP	load 		j	
+6004	043				sub 		one	
+4002	044				store 	j	
+C01F	045				jmp		to j LOOP
+3003	046	END OF i LOOP	load 		size	
+6004	047				sub 		1	
+4002	048				store 	j	
+3001	049				load 		i 	
+5004	04A				add 		one	
+4001	04B				store 	i	
+C01C	04C				jmp		to i LOOP
+3001	04D				load 		i	
+6001	04E				sub 		i	
+4001	04F				store 	i	
+3003	050	PRINT			load 		size	
+6001	051				sub 		i	
+D05D	052				jmpe		to END
+3006	053				load 		loadit	
+5005	054				add 		address	
+5001	055				add 		i	
+4057	056				store 	doit6	
+0000	057				dw doit6	
+1800	058				printH	
+3001	059				load 		i	
+5004	05A				add 		one	
+4001	05B				store 	i	
+C050	05C				jmp		to PRINT
+0000	05D				halt	
